@@ -7,8 +7,7 @@ export const Posts: React.FC = () => {
   const [allPosts, setAllPosts] = useState<PostData[] | null>(null);
   //PostData est un tableau
   const [numberOfPosts, setNumberOfPosts] = useState<number>(5);
-  //chargement de la page : récu père 5 publications
-  console.log(allPosts);
+  //chargement de la page : récupère 5 publications
 
   const localOrState = localStorage.getItem('number') || numberOfPosts;
   const localOrStateNum = localOrState;
@@ -44,6 +43,7 @@ export const Posts: React.FC = () => {
           min={1}
           max={20}
           onChange={onChange}
+          defaultValue={localOrStateNum}
           //récupérer infos onChange (property)
         />
         <PostList allPosts={allPosts} />
