@@ -10,11 +10,14 @@ export const Posts: React.FC = () => {
   //chargement de la page : récu père 5 publications
   console.log(allPosts);
 
+  const localOrState = localStorage.getItem('number') || numberOfPosts;
+  const localOrStateNum = localOrState;
+
   useEffect(() => {
     const getPosts = async () => {
       // json2ts : convertir le json en tsx, générer une interface qui va décrire le contenu de l'objet posts
       const res = await fetch(
-        `https://jsonplaceholder.typicode.com/posts?_limit=${numberOfPosts}`
+        `https://jsonplaceholder.typicode.com/posts?_limit=${localOrStateNum}`
       );
       const data: PostData[] = await res.json();
       setAllPosts(data);
@@ -25,6 +28,7 @@ export const Posts: React.FC = () => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     //coller le type de onChange ici (supp Handler : ChangeEventHandler)
     setNumberOfPosts(+e.target.value);
+    localStorage.setItem('number', e.target.value);
   };
 
   return (
@@ -32,9 +36,9 @@ export const Posts: React.FC = () => {
       className='post-container'
       style={{ width: '100vw', margin: '0 auto' }}
     >
-      <h1>Page Principale</h1>
+      <h1 style={{ color: 'red', textAlign: 'center' }}>Page Principale</h1>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <label htmlFor='posts'>Nombre de publications : {numberOfPosts}</label>
+        <label htmlFor='posts'>Nombre de publications :{localOrState}</label>
         <input
           type='range'
           min={1}
