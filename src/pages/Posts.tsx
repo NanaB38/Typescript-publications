@@ -1,30 +1,31 @@
 import { useEffect, useState } from 'react';
 import { PostList } from '../components/PostList';
-
-//coller depuis json2ts
-export interface PostData {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
-}
+import { PostData } from '../interfaces';
 
 export const Posts: React.FC = () => {
   // React.FC : composant fonctionnel
   const [allPosts, setAllPosts] = useState<PostData[] | null>(null);
   //PostData est un tableau
+  const [numberOfPosts, setNumberOfPosts] = useState<number>(5);
+  //chargement de la page : récu père 5 publications
+  console.log(allPosts);
 
   useEffect(() => {
     const getPosts = async () => {
       // json2ts : convertir le json en tsx, générer une interface qui va décrire le contenu de l'objet posts
       const res = await fetch(
-        'https://jsonplaceholder.typicode.com/posts?_limit=10'
+        `https://jsonplaceholder.typicode.com/posts?_limit=${numberOfPosts}`
       );
       const data: PostData[] = await res.json();
       setAllPosts(data);
     };
     getPosts();
-  }, []);
+  }, [numberOfPosts]);
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //coller le type de onChange ici (supp Handler : ChangeEventHandler)
+    setNumberOfPosts(+e.target.value);
+  };
 
   return (
     <div
@@ -33,9 +34,15 @@ export const Posts: React.FC = () => {
     >
       <h1>Page Principale</h1>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <label htmlFor='posts'>Nombre de publications : 5</label>
-        <input type='range' min={1} max={20} />
-        <PostList />
+        <label htmlFor='posts'>Nombre de publications : {numberOfPosts}</label>
+        <input
+          type='range'
+          min={1}
+          max={20}
+          onChange={onChange}
+          //récupérer infos onChange (property)
+        />
+        <PostList allPosts={allPosts} />
       </div>
     </div>
   );
